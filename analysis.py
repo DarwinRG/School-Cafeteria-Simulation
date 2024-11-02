@@ -1,4 +1,4 @@
-# Author: Darwin Guillermo
+# Author: DarwinRG
 
 # This module provides functionality to create detailed analysis plots for the school cafeteria simulation.
 # It generates multiple plots including a histogram of waiting times, a time series plot of waiting times,
@@ -8,74 +8,86 @@
 # Packages
 import os
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from config import *
 import datetime
 
+
+# Creates detailed analysis with multiple plots and configuration details
 def create_detailed_analysis(waiting_times, filename_prefix="simulation"):
-    """
-    Creates detailed analysis with multiple plots and configuration details
-    """
     # Create figure with multiple subplots
     fig = plt.figure(figsize=(15, 12))
-    
+
     # Add title and developer info
-    fig.text(0.2, 0.98, 'School Cafeteria Simulator', 
-             fontsize=16, 
-             fontweight='bold', 
-             ha='center')
-    fig.text(0.99, 0.98, 'Developed by Darwin Guillermo', 
-             ha='right', 
-             fontsize=10, 
-             fontweight='bold')
-    
+    fig.text(
+        0.2,
+        0.98,
+        "School Cafeteria Simulation",
+        fontsize=16,
+        fontweight="bold",
+        ha="center",
+    )
+    fig.text(
+        0.99,
+        0.98,
+        "Developed by Darwin Guillermo",
+        ha="right",
+        fontsize=10,
+        fontweight="bold",
+    )
+
     # Define grid layout with proper spacing
     gs = plt.GridSpec(3, 2, figure=fig)
     gs.update(top=0.93, bottom=0.05, left=0.1, right=0.95, hspace=0.3, wspace=0.2)
-    
+
     # Histogram plot
     ax1 = fig.add_subplot(gs[0, :])
-    waiting_times_minutes = [t/60 for t in waiting_times]
-    n, bins, patches = ax1.hist(waiting_times_minutes, 
-                               bins=30, 
-                               edgecolor='black', 
-                               alpha=0.7,
-                               color='skyblue')
-    
-    ax1.set_title('Distribution of Student Waiting Times', fontsize=12)
-    ax1.set_xlabel('Waiting Time (minutes)')
-    ax1.set_ylabel('Number of Students')
-    ax1.grid(True, linestyle='--', alpha=0.7)
-    
+    waiting_times_minutes = [t / 60 for t in waiting_times]
+    n, bins, patches = ax1.hist(
+        waiting_times_minutes, bins=30, edgecolor="black", alpha=0.7, color="skyblue"
+    )
+
+    ax1.set_title("Distribution of Student Waiting Times", fontsize=12)
+    ax1.set_xlabel("Waiting Time (minutes)")
+    ax1.set_ylabel("Number of Students")
+    ax1.grid(True, linestyle="--", alpha=0.7)
+
     # Time series plot
     ax2 = fig.add_subplot(gs[1, :])
     times = np.arange(len(waiting_times))
-    ax2.plot(times, waiting_times_minutes, 
-             color='blue', 
-             alpha=0.5, 
-             label='Individual Waiting Times')
-    
+    ax2.plot(
+        times,
+        waiting_times_minutes,
+        color="blue",
+        alpha=0.5,
+        label="Individual Waiting Times",
+    )
+
     # Add moving average
     window = 10
-    moving_avg = np.convolve(waiting_times_minutes, 
-                            np.ones(window)/window, 
-                            mode='valid')
-    ax2.plot(times[window-1:], moving_avg, 
-             'r-', 
-             linewidth=2,
-             label=f'{window}-student Moving Average')
-    
-    ax2.set_title('Waiting Times Throughout Service Period')
-    ax2.set_xlabel('Student Number (Order of Arrival)')
-    ax2.set_ylabel('Waiting Time (minutes)')
-    ax2.grid(True, linestyle='--', alpha=0.7)
+    moving_avg = np.convolve(
+        waiting_times_minutes, np.ones(window) / window, mode="valid"
+    )
+    ax2.plot(
+        times[window - 1 :],
+        moving_avg,
+        "r-",
+        linewidth=2,
+        label=f"{window}-student Moving Average",
+    )
+
+    ax2.set_title("Waiting Times Throughout Service Period")
+    ax2.set_xlabel("Student Number (Order of Arrival)")
+    ax2.set_ylabel("Waiting Time (minutes)")
+    ax2.grid(True, linestyle="--", alpha=0.7)
     ax2.legend()
-    
+
     # Configuration and Statistics Text
     ax3 = fig.add_subplot(gs[2, 0])
-    ax3.axis('off')
+    ax3.axis("off")
     config_text = (
         "Simulation Configuration:\n"
         f"Time: {datetime.timedelta(seconds=SIMULATION_START_TIME)} - "
@@ -91,14 +103,13 @@ def create_detailed_analysis(waiting_times, filename_prefix="simulation"):
         f"Payment time: {MIN_PAYMENT_TIME}-{MAX_PAYMENT_TIME}\n"
         f"Eating time: {MIN_EATING_TIME}-{MAX_EATING_TIME}"
     )
-    ax3.text(0, 1, config_text, 
-             verticalalignment='top', 
-             fontfamily='monospace', 
-             fontsize=10)
-    
+    ax3.text(
+        0, 1, config_text, verticalalignment="top", fontfamily="monospace", fontsize=10
+    )
+
     # Statistics Text
     ax4 = fig.add_subplot(gs[2, 1])
-    ax4.axis('off')
+    ax4.axis("off")
     stats_text = (
         "Simulation Results:\n\n"
         f"Students served: {len(waiting_times)}\n"
@@ -117,35 +128,37 @@ def create_detailed_analysis(waiting_times, filename_prefix="simulation"):
         f"Service Rate: {len(waiting_times)/((SIMULATION_END_TIME-SIMULATION_START_TIME)/60):.2f} "
         "students/minute"
     )
-    ax4.text(0, 1, stats_text, 
-             verticalalignment='top', 
-             fontfamily='monospace', 
-             fontsize=10)
-    
+    ax4.text(
+        0, 1, stats_text, verticalalignment="top", fontfamily="monospace", fontsize=10
+    )
+
     # Adjust subplot layout
     plt.subplots_adjust(top=0.93)
-    
+
     # Create results directory if it doesn't exist
     results_dir = "results"
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
-    
+
     # Save the plot
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{filename_prefix}_{timestamp}.png"
     filepath = os.path.join(results_dir, filename)
-    plt.savefig(filepath, dpi=300, bbox_inches='tight')
-    
+    plt.savefig(filepath, dpi=300, bbox_inches="tight")
+
     # Print statistics to console
     print("\n=== Simulation Summary ===")
     print(config_text)
     print("\n" + stats_text)
-    
+
     return filename
+
 
 # If you want to test the analysis independently
 if __name__ == "__main__":
     # Example usage with dummy data
-    test_waiting_times = np.random.normal(1200, 300, 100)  # Generate dummy waiting times
+    test_waiting_times = np.random.normal(
+        1200, 300, 100
+    )  # Generate dummy waiting times
     filename = create_detailed_analysis(test_waiting_times, "test_simulation")
     print(f"Analysis saved to: {filename}")
