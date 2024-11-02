@@ -55,13 +55,13 @@ You can download the repository as a ZIP file and extract it, or you can clone t
 2. Run the following command to clone the repository:
 
 ```sh
-git clone https://github.com/darwinrg/school-cafeteria-sim.git
+git clone https://github.com/DarwinRG/School-Cafeteria-Simulation.git
 ```
 
 3. Navigate to the project directory:
 
 ```sh
-cd school-cafeteria-sim
+cd School-Cafeteria-Simulation
 ```
 
 ### ⚙️ Initial Setup
@@ -74,7 +74,7 @@ python -m venv .venv
 ```
 
 2. Activate the Virtual Environment
-
+> "Remember to re-run this command each time you restart your IDE."
 ```sh
 .\.venv\Scripts\activate
 ```
