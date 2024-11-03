@@ -1,8 +1,6 @@
-# Author: DarwinRG
-
 # This script simulates the operations of a school cafeteria using the SimPy library.
 # It models the behavior of students arriving at the cafeteria, selecting stores, ordering food,
-# paying for food, and finding seating to eat. The simulation tracks waiting times and generates
+# paying for food, and finding seating to eat. The simulation tracks total time spent and generates
 # an analysis report at the end.
 #
 # The main components include:
@@ -15,8 +13,6 @@
 #
 # The simulation parameters are configured in the config module, and the analysis is handled
 # by the analysis module.
-#
-
 
 import simpy
 import random
@@ -49,7 +45,6 @@ class Cafeteria:
             self.stores.append({"servers": servers, "cashiers": cashiers, "queue": 0})
 
 
-# Selects a store based on the configured strategy.
 def select_store(cafeteria):
     if STORE_SELECTION_STRATEGY == "random":
         return random.randint(0, STORES - 1)
@@ -60,8 +55,7 @@ def select_store(cafeteria):
     return 0
 
 
-# Simulates the process of a student ordering, paying, and eating in the cafeteria.
-def student_process(env, student, cafeteria, waiting_times):
+def student_process(env, student, cafeteria, total_times):
     arrival_time = env.now
 
     # Select store
@@ -86,45 +80,35 @@ def student_process(env, student, cafeteria, waiting_times):
         yield request
         yield env.timeout(random.uniform(MIN_EATING_TIME, MAX_EATING_TIME))
 
-    # Record waiting time
-    waiting_time = env.now - arrival_time
-    waiting_times.append(waiting_time)
+    # Record total time spent
+    total_time = env.now - arrival_time
+    total_times.append(total_time)
 
 
-# Generates student arrivals throughout the simulation.
-def generate_arrivals(env, cafeteria, waiting_times):
-    # Generate random number of students
+def generate_arrivals(env, cafeteria, total_times):
     num_students = random.randint(MIN_STUDENTS, MAX_STUDENTS)
 
-    # Create students throughout the day
     for i in range(num_students):
         student = Student(env, i, cafeteria)
-        env.process(student_process(env, student, cafeteria, waiting_times))
-
-        # Random arrival time
+        env.process(student_process(env, student, cafeteria, total_times))
         yield env.timeout(random.expovariate(1.0))
 
 
-# Initializes and runs the simulation, and generates the analysis report.
 def run_simulation():
-    # Initialize simulation
     env = simpy.Environment()
     cafeteria = Cafeteria(env)
-    waiting_times = []
+    total_times = []
 
-    # Start student generation process
-    env.process(generate_arrivals(env, cafeteria, waiting_times))
+    env.process(generate_arrivals(env, cafeteria, total_times))
 
-    # Run simulation
     simulation_duration = SIMULATION_END_TIME - SIMULATION_START_TIME
     env.run(until=simulation_duration)
 
-    # Create analysis
-    analysis_file = create_detailed_analysis(waiting_times, "cafeteria_simulation")
+    analysis_file = create_detailed_analysis(total_times, "cafeteria_simulation")
     print(f"\nAnalysis saved to: {analysis_file}")
 
-    return waiting_times
+    return total_times
 
 
 if __name__ == "__main__":
-    waiting_times = run_simulation()
+    total_times = run_simulation()

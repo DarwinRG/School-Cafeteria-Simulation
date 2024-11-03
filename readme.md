@@ -99,17 +99,15 @@ To run this project, you will need to configure the following variables to the *
 | STORES                   | 2                | Number of stores           |
 | SERVERS_PER_STORE        | 1                | Servers at each store      |
 | CASHIERS_PER_STORE       | 1                | Cashiers at each store     |
-| MEAL_CHOICES_PER_STORE   | 5                | Available meal options     |
 | SEATING_CAPACITY         | 100              | Total seats available      |
 | MIN_STUDENTS             | 200              | Minimum number of students |
 | MAX_STUDENTS             | 300              | Maximum number of students |
-| SKIP_LINE_PROBABILITY    | 0.1              | 10% chance to skip line    |
-| MIN_ORDER_TIME           | 30               | 30 seconds                 |
-| MAX_ORDER_TIME           | 60               | 1 minute                   |
-| MIN_PAYMENT_TIME         | 20               | 20 seconds                 |
-| MAX_PAYMENT_TIME         | 45               | 45 seconds                 |
-| MIN_EATING_TIME          | 900              | 15 minutes                 |
-| MAX_EATING_TIME          | 1800             | 30 minutes                 |
+| MIN_ORDER_TIME           | 15               | 15 seconds                 |
+| MAX_ORDER_TIME           | 45               | 45 seconds                 |
+| MIN_PAYMENT_TIME         | 30               | 30 seconds                 |
+| MAX_PAYMENT_TIME         | 60               | 1 minute                   |
+| MIN_EATING_TIME          | 300              | 5 minutes                  |
+| MAX_EATING_TIME          | 600              | 10 minutes                 |
 | STORE_SELECTION_STRATEGY | "shortest_queue" | Queue selection method     |
 
 &nbsp;
@@ -132,12 +130,12 @@ After running the simulation, the program will generate an output in your termin
 Example file in the results folder:
 
 Format|Program Name|Date|Time
-cafeteria_simulation_20241102_132716.png
+cafeteria_simulation_20241104_072518.png
 ```
 
 ### 📈 Result
 
-![Result](results/cafeteria_simulation_20241102_132716.png)
+![Result](results/cafeteria_simulation_20241104_072518.png)
 
 &nbsp;
 
